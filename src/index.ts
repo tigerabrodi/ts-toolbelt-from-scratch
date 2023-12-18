@@ -1,3 +1,0 @@
-type Car = {
-  name: string
-}
