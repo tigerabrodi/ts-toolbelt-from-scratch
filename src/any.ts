@@ -11,8 +11,8 @@ type ExampleEquals = Equals<{ a: number; b: string }, { a: number; b: string }> 
 
 // Utility Type 3: Contains
 // Checks if a type is contained within another type (like array.includes).
-// type Contains<T, U> = // TODO: Implement this type
-// type ExampleContains = Contains<[string, number, boolean], boolean> // Expected to be true
+type Contains<T extends Array<any>, U> = U extends T[number] ? true : false
+type ExampleContains = Contains<[string, number, boolean], boolean> // Expected to be true
 
 // // Utility Type 4: Extends
 // // Checks if one type extends another.
@@ -28,6 +28,6 @@ type ExampleEquals = Equals<{ a: number; b: string }, { a: number; b: string }> 
 const exampleAt: ExampleAt = 42 // Should be a number
 
 const exampleEquals: ExampleEquals = true // Should be true
-// const exampleContains: ExampleContains = true; // Should be true
+const exampleContains: ExampleContains = true // Should be true
 // const exampleExtends: ExampleExtends = true; // Should be true
 // const exampleIs: ExampleIs = false; // Should be false
