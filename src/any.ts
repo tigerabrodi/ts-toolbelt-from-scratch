@@ -16,8 +16,8 @@ type ExampleContains = Contains<[string, number, boolean], boolean> // Expected 
 
 // // Utility Type 4: Extends
 // // Checks if one type extends another.
-// type Extends<A, B> = // TODO: Implement this type
-// type ExampleExtends = Extends<'a' | 'b', string> // Expected to be true
+type Extends<A, B> = A extends B ? true : false
+type ExampleExtends = Extends<'a' | 'b', string> // Expected to be true
 
 // // Utility Type 5: Is
 // // Determines if a type is exactly another type (not just assignable).
@@ -29,5 +29,5 @@ const exampleAt: ExampleAt = 42 // Should be a number
 
 const exampleEquals: ExampleEquals = true // Should be true
 const exampleContains: ExampleContains = true // Should be true
-// const exampleExtends: ExampleExtends = true; // Should be true
+const exampleExtends: ExampleExtends = true // Should be true
 // const exampleIs: ExampleIs = false; // Should be false
