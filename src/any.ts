@@ -1,7 +1,6 @@
-
 // Utility Type 1: At
 // Retrieves the type at a specified index in a tuple or array.
-type At<T extends any[], I extends number> = // TODO: Implement this type
+type At<Type extends Array<any>, Index extends number> = Type[Index]
 type ExampleAt = At<[string, number, boolean], 1> // Expected to be number
 
 // Utility Type 2: Equals
@@ -25,7 +24,7 @@ type ExampleAt = At<[string, number, boolean], 1> // Expected to be number
 // type ExampleIs = Is<string | number, string> // Expected to be false
 
 // Usage examples (should fail until types are correctly implemented)
-const exampleAt: ExampleAt = 42; // Should be a number
+const exampleAt: ExampleAt = 42 // Should be a number
 
 // const exampleEquals: ExampleEquals = true; // Should be true
 // const exampleContains: ExampleContains = true; // Should be true
