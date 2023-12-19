@@ -23,7 +23,6 @@ type ExampleExtends = Extends<'a' | 'b', string> // Expected to be true
 
 // Utility Type 5: Is
 // Determines if a type is exactly another type (not just assignable).
-// This is similar to the `Equals` type, but it doesn't allow for unions.
 
 // In TypeScript, the expression T extends U is a conditional type that checks if type T can be assigned to type U. However, this has a distributive property when T is a union type. For example, string | number extends string would be true because string is part of the union and is assignable to string.
 
@@ -32,7 +31,6 @@ type ExampleExtends = Extends<'a' | 'b', string> // Expected to be true
 // The double check with [U] extends [T] ensures that not only can T be assigned to U, but also U can be assigned to T. This reciprocal relationship is necessary to establish that T and U are exactly the same type, not just that they are compatible or one is a subset of the other.
 type Is<T, U> = [T] extends [U] ? ([U] extends [T] ? true : false) : false
 type ExampleIs = Is<string | number, string> // Expected to be false
-type SecondExampleIs = Is<{ a: number }, { a: number }> // Expected to be true
 
 // Usage examples (should fail until types are correctly implemented)
 const exampleAt: ExampleAt = 42 // Should be a number
