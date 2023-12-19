@@ -5,11 +5,12 @@ type ExampleAt = At<[string, number, boolean], 1> // Expected to be number
 
 // Utility Type 2: Equals
 // Compares two types for equality.
-// type Equals<A, B> = // TODO: Implement this type
-// type ExampleEquals = Equals<{ a: number; b: string }, { a: number; b: string }> // Expected to be true
+type Equals<A, B> = A extends B ? (B extends A ? true : false) : false
 
-// // Utility Type 3: Contains
-// // Checks if a type is contained within another type (like array.includes).
+type ExampleEquals = Equals<{ a: number; b: string }, { a: number; b: string }> // Expected to be true
+
+// Utility Type 3: Contains
+// Checks if a type is contained within another type (like array.includes).
 // type Contains<T, U> = // TODO: Implement this type
 // type ExampleContains = Contains<[string, number, boolean], boolean> // Expected to be true
 
@@ -26,7 +27,7 @@ type ExampleAt = At<[string, number, boolean], 1> // Expected to be number
 // Usage examples (should fail until types are correctly implemented)
 const exampleAt: ExampleAt = 42 // Should be a number
 
-// const exampleEquals: ExampleEquals = true; // Should be true
+const exampleEquals: ExampleEquals = true // Should be true
 // const exampleContains: ExampleContains = true; // Should be true
 // const exampleExtends: ExampleExtends = true; // Should be true
 // const exampleIs: ExampleIs = false; // Should be false
