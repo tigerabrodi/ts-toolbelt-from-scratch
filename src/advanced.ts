@@ -10,8 +10,13 @@ type ExampleTail = Tail<[1, 2, 3]> // Expected to be [2, 3]
 
 // // Utility Type 3: Zip
 // // Combines two arrays into a single array of pairs.
-// type Zip<T extends any[], U extends any[]> = // TODO: Implement this type
-// type ExampleZip = Zip<[1, 2, 3], ['a', 'b', 'c']> // Expected to be [[1, 'a'], [2, 'b'], [3, 'c']]
+type Zip<T extends any[], U extends any[]> = T extends [infer A, ...infer RestT]
+  ? U extends [infer B, ...infer RestU]
+    ? [[A, B], ...Zip<RestT, RestU>]
+    : []
+  : []
+
+type ExampleZip = Zip<[1, 2, 3], ['a', 'b', 'c']> // Expected to be [[1, 'a'], [2, 'b'], [3, 'c']]
 
 // // Utility Type 4: Paths
 // // Represents all possible paths (as string tuples) through an object's properties.
@@ -34,7 +39,11 @@ type ExampleTail = Tail<[1, 2, 3]> // Expected to be [2, 3]
 // Usage examples (should fail until types are correctly implemented)
 const exampleHead: ExampleHead = 3
 const exampleTail: ExampleTail = [2, 3]
-// const exampleZip: ExampleZip = [[1, 'a'], [2, 'b'], [3, 'c']];
+const exampleZip: ExampleZip = [
+  [1, 'a'],
+  [2, 'b'],
+  [3, 'c'],
+]
 // const examplePaths: ExamplePaths = ['a', 'b', 'c'];
 // const exampleOmitByType: ExampleOmitByType = { a: 'hello', c: true };
 // const exampleDeepPartial: ExampleDeepPartial = { a: { b: { c: 123 } } };
