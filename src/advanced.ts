@@ -42,11 +42,16 @@ type ExampleOmitByType = OmitByType<
 >
 // Expected to be { a: string; c: boolean }
 
-// // Utility Type 6: DeepPartial
-// // Makes all properties of an object (and its nested objects) optional.
-// type DeepPartial<T> = // TODO: Implement this type
-// type ExampleDeepPartial = DeepPartial<{ a: { b: { c: number; d: string }; e: boolean } }>
-// // Expected to be { a?: { b?: { c?: number; d?: string }; e?: boolean } }
+// Utility Type 6: DeepPartial
+// Makes all properties of an object (and its nested objects) optional.
+type DeepPartial<T extends object> = {
+  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K]
+}
+
+type ExampleDeepPartial = DeepPartial<{
+  a: { b: { c: number; d: string }; e: boolean }
+}>
+// Expected to be { a?: { b?: { c?: number; d?: string }; e?: boolean } }
 
 // Usage examples (should fail until types are correctly implemented)
 const exampleHead: ExampleHead = 3
@@ -58,4 +63,4 @@ const exampleZip: ExampleZip = [
 ]
 const examplePaths: ExamplePaths = ['a', 'b', 'c']
 const exampleOmitByType: ExampleOmitByType = { a: 'hello', c: true }
-// const exampleDeepPartial: ExampleDeepPartial = { a: { b: { c: 123 } } };
+const exampleDeepPartial: ExampleDeepPartial = { a: { b: { c: 123 } } }
