@@ -5,8 +5,8 @@ type ExampleHead = Head<[3, 2, 1]> // Expected to be 3
 
 // Utility Type 2: Tail
 // Extracts all but the first element of an array type.
-// type Tail<T extends any[]> = // TODO: Implement this type
-// type ExampleTail = Tail<[1, 2, 3]> // Expected to be [2, 3]
+type Tail<T extends any[]> = T extends [infer U, ...infer Rest] ? Rest : never
+type ExampleTail = Tail<[1, 2, 3]> // Expected to be [2, 3]
 
 // // Utility Type 3: Zip
 // // Combines two arrays into a single array of pairs.
@@ -33,7 +33,7 @@ type ExampleHead = Head<[3, 2, 1]> // Expected to be 3
 
 // Usage examples (should fail until types are correctly implemented)
 const exampleHead: ExampleHead = 3
-// const exampleTail: ExampleTail = [2, 3];
+const exampleTail: ExampleTail = [2, 3]
 // const exampleZip: ExampleZip = [[1, 'a'], [2, 'b'], [3, 'c']];
 // const examplePaths: ExamplePaths = ['a', 'b', 'c'];
 // const exampleOmitByType: ExampleOmitByType = { a: 'hello', c: true };
