@@ -80,3 +80,123 @@ type Zip<T extends any[], U extends any[]> = T extends [infer A, ...infer RestT]
     : []
   : []
 ```
+
+## Paths
+
+This one took me several hours to solve lol :joy:
+
+```ts
+type Paths<T extends Record<string, any>> = keyof T extends never
+  ? []
+  : T extends object
+  ? { [K in keyof T]: [K, ...Paths<T[K]>] }[keyof T]
+  : []
+
+type ExamplePaths = Paths<{ a: { b: { c: number }; d: string }; e: boolean }> // ['a', 'b', 'c'] | ['a', 'd'] | ['e']
+```
+
+Let's break it down in small steps.
+
+The first check `keyof T extends never ? [] ...` is to check if `T` is an empty object. If it is, then we return an empty array.
+
+The second check `T extends object ? ...` is to check if `T` is an object. If it is, then we return a mapped type that we turn into a union type with `[keyof T]` (indexed access type turn the object into a union type of all the keys' values).
+
+Example of indexed access type on a mapped type:
+
+```ts
+type Example = { a: string; b: number }
+type ExampleMapped = { [K in keyof Example]: Example[K] } // results in { a: string; b: number }
+type ExampleIndexedAccess = ExampleMapped[keyof Example] // results in string | number
+```
+
+`ExampleMapped[keyof Example]` is the same as `{ [K in keyof Example]: Example[K] }[keyof Example]`.
+
+Let's take a look at the mapped type:
+
+```ts
+{ [K in keyof T]: [K, ...Paths<T[K]>] }[keyof T]
+```
+
+Initial object:
+
+```ts
+{
+  a: {
+    b: {
+      c: number
+    }
+    d: string
+  }
+  e: boolean
+}
+```
+
+First iteration:
+
+```ts
+{
+  a: ['a', ...Paths<{ b: { c: number }; d: string }>]
+}
+```
+
+Second iteration:
+
+```ts
+{
+  a: [ 'a', ...[ 'b', ...Paths<{ c: number }> ] ], // Array next to 'a' will be spreaded
+  e: [ 'e', ...Paths<boolean> ] // boolean is not an object, so it returns []
+}
+```
+
+`...Paths<boolean>` is the same as `...[]` which is the same as `[]`.
+
+Third iteration:
+
+```ts
+{
+  a: [ 'a', ...[ 'b', ...[ 'c', ...Paths<number> ] ] ],
+  e: [ 'e', ...[] ]
+}
+```
+
+`...Paths<number>` is the same as `...[]` which is the same as `[]`.
+
+Fourth iteration:
+
+```ts
+{
+  a: [ 'a', ...[ 'b', ...[ 'c', ...[] ]]],
+  e: [ 'e', ...[] ]
+}
+```
+
+You can see where this is heading.
+
+Look at `a` closely. It's a bit confusing. Step by step breakdown of the spreading:
+
+1. `[ 'a', ...[ 'b', ...[ 'c'] ] ]`
+2. `[ 'a', ...[ 'b', 'c' ] ]`
+3. `[ 'a', 'b', 'c' ]`
+
+At the end, we'll have this object:
+
+```ts
+{
+  a: [ 'a', 'b', 'c' ],
+  e: [ 'e' ]
+}
+```
+
+Now, we need to turn this into a union type of its values. We do that by indexing the object with `[keyof T]`.
+
+In human language, we're saying: "Give me the type of the values of the object".
+
+One confusing aspect: How does indexing once result in a union type of the values?
+
+It doesn't index once.
+
+`[keyof T]` doesn't mean "index once". It means "index for each key in the object". Essentially, looping over the object and indexing each key.
+
+```ts
+{ [K in keyof T]: [K, ...Paths<T[K]>] }[keyof T]
+```
