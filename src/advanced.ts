@@ -29,11 +29,18 @@ type Paths<T extends Record<string, any>> = keyof T extends never
 type ExamplePaths = Paths<{ a: { b: { c: number }; d: string }; e: boolean }>
 // Expected to be ['a', 'b', 'c'] | ['a', 'd'] | ['e']
 
-// // Utility Type 5: OmitByType
-// // Omits keys from an object where the value matches a specified type.
-// type OmitByType<T, U> = // TODO: Implement this type
-// type ExampleOmitByType = OmitByType<{ a: string; b: number; c: boolean }, number>
-// // Expected to be { a: string; c: boolean }
+// Utility Type 5: OmitByType
+// Omits keys from an object where the value matches a specified type.
+type OmitByType<T, U> = T extends object
+  ? {
+      [K in keyof T as T[K] extends U ? never : K]: T[K]
+    }
+  : never
+type ExampleOmitByType = OmitByType<
+  { a: string; b: number; c: boolean },
+  number
+>
+// Expected to be { a: string; c: boolean }
 
 // // Utility Type 6: DeepPartial
 // // Makes all properties of an object (and its nested objects) optional.
@@ -50,5 +57,5 @@ const exampleZip: ExampleZip = [
   [3, 'c'],
 ]
 const examplePaths: ExamplePaths = ['a', 'b', 'c']
-// const exampleOmitByType: ExampleOmitByType = { a: 'hello', c: true };
+const exampleOmitByType: ExampleOmitByType = { a: 'hello', c: true }
 // const exampleDeepPartial: ExampleDeepPartial = { a: { b: { c: 123 } } };
